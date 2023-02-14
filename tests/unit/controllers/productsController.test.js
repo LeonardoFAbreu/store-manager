@@ -6,10 +6,10 @@ const { expect, use } = chai;
 
 use(sinonChai);
 
-const { productsService } = require('../../../src/services');
-const { productsController } = require('../../../src/controllers');
-const { allProducts } = require('./productsController.mock');
-const { newProduct } = require('./productsService.mock');
+const { productsService } = require('../../../src/services/productsService');
+const { productsController } = require('../../../src/controllers/productsController');
+const { allProducts, newProduct } = require('./productsController.mock');
+// const { newProduct } = require('./productsService.mock');
 
 describe('Verificando camada productsController', function () {
   it('Retorna a lista com todos os produtos', async function () {

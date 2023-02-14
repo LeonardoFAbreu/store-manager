@@ -2,8 +2,8 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 
 const { allProducts } = require('./productsService.mock');
-const { productsModel } = require('../../../src/models');
-const { productsService } = require('../../../src/services');
+const { productsModel } = require('../../../src/models/productsModel');
+const { productsService } = require('../../../src/services/productsService');
 
 describe('Verificando service de products', function () {
   it('retorna a lista completa de todos os produtos', async function () {

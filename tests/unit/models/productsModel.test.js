@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 const connection = require('../../../src/models/connection');
 const { allProducts } = require('./productsModel.mock');
-const { productsModel } = require('../../../src/models');
+const { productsModel } = require('../../../src/models/productsModel');
 
 describe('Teste de unidade do product ', function () {
   it('Recuperando a lista de produtos', async function () {
