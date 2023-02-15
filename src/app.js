@@ -20,7 +20,7 @@ app.get('/sales', salesController.getAll);
 
 app.get('/sales/:id', salesController.getById);
 
-// app.put('/products')
+app.put('/products/:id', productsController.updateById);
 
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {

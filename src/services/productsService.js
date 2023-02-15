@@ -1,4 +1,5 @@
 const productsModel = require('../models/productsModel');
+const { nameValidation } = require('../middlewares/nameValidation');
 
 const getAll = async () => {
   const products = await productsModel.getAll();
@@ -20,8 +21,24 @@ const createProduct = async ({ name }) => {
   return { id, name };
 };
 
+const updateById = async (id, product) => {
+  const productValidation = nameValidation(product);
+  if (productValidation.type) {
+    return { type: productValidation.type, message: productValidation.message };
+  }
+  
+  const productUpdate = await productsModel.getById(id);
+  if (!productUpdate) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+
+  await productsModel.updateById(id, product);
+  const result = await productsModel.getById(id);
+
+  return { type: null, message: result };
+};
+
 module.exports = {
   getAll,
   getById,
   createProduct,
+  updateById,
 };

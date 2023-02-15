@@ -6,19 +6,19 @@ const { expect, use } = chai;
 
 use(sinonChai);
 
-const { productsService } = require('../../../src/services/productsService');
-const { productsController } = require('../../../src/controllers/productsController');
-const { allProducts, newProduct } = require('./productsController.mock');
-// const { newProduct } = require('./productsService.mock');
+const productsService = require('../../../src/services/productsService');
+const productsController = require('../../../src/controllers/productsController');
+const { allProducts } = require('./productsController.mock');
+const { newProduct } = require('../service/productsService.mock');
 
-describe('Verificando camada productsController', function () {
-  it('Retorna a lista com todos os produtos', async function () {
+describe('Checking the Controller layer', function () {
+  it('Returns the complete list of products', async function () {
     const res = {};
     const req = {};
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
-    sinon.stub(productsService, 'findAll').resolves({ type: null, message: allProducts});
+    sinon.stub(productsService, 'getAll').resolves({ type: null, message: allProducts});
 
     await productsController.listProducts(req, res);
 
@@ -26,7 +26,7 @@ describe('Verificando camada productsController', function () {
     expect(res.json).to.have.been.calledWith(allProducts);
   });
 
-  it('Retorna produto pelo id', async function () {
+  it('Return product by id', async function () {
     const res = {};
     const req = {
       params: { id: 3 },
@@ -34,7 +34,7 @@ describe('Verificando camada productsController', function () {
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
-    sinon.stub(productsService, 'findById').resolves({ type: null, message: [newProduct] });
+    sinon.stub(productsService, 'getById').resolves({ type: null, message: [newProduct] });
 
     await productsController.listProductsById(req, res);
 
@@ -42,7 +42,7 @@ describe('Verificando camada productsController', function () {
     expect(res.json).to.have.been.calledWith(newProduct);
   });
 
-   it('Retorna erro caso o id do produto seja inexistente', async function () {
+   it('Returns an error message if the product id does not exist', async function () {
     const res = {};
     const req = {
       params: { id: 10 },
@@ -50,7 +50,7 @@ describe('Verificando camada productsController', function () {
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
-    sinon.stub(productsService, 'findById').resolves({ type: 404, message: 'Product not found' });
+    sinon.stub(productsService, 'getById').resolves({ type: 404, message: 'Product not found' });
 
     await productsController.listProductsById(req, res);
 
