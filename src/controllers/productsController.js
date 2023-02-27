@@ -29,7 +29,7 @@ const createProduct = async (req, res) => {
 const productUpdate = async (req, res) => { 
   const { name } = req.body;
   const { id } = req.params;
-  const { type, message } = await productsService.productUpdate(name, Number(id));
+  const { type, message } = await productsService.productUpdate(name, id);
   if (type) return res.status(404).json({ message });
 
   return res.status(200).json(message);
@@ -37,7 +37,7 @@ const productUpdate = async (req, res) => {
 
 const productDelete = async (req, res) => { 
   const { id } = req.params;
-  const { type, message } = await productsService.productDelete(Number(id));
+  const { type, message } = await productsService.productDelete(id);
   if (type) return res.status(404).json({ message });
 
   return res.status(204).json(message);

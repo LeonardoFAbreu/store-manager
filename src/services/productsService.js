@@ -30,9 +30,9 @@ const productUpdate = async (name, id) => {
 };
 
 const productDelete = async (id) => { 
-  const product = await getById(Number(id));
-  if (!product || product.length <= 0) return { type: 'NOT FOUND', message: 'Product not found' };
-  await productsModel.productDelete(Number(id));
+  const productSearch = await productsModel.getById(id);
+  if (!productSearch) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+  await productsModel.productDelete(id);
 
   return { type: null, message: '' };
 };
