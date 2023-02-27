@@ -1,64 +1,63 @@
-const chai = require('chai');
-const sinon = require('sinon');
-const sinonChai = require('sinon-chai');
-
-const { expect, use } = chai;
-
-use(sinonChai);
-
 const productsService = require('../../../src/services/productsService');
 const productsController = require('../../../src/controllers/productsController');
-const { allProducts } = require('./productsController.mock');
-const { newProduct } = require('../service/productsService.mock');
+const { productsMock, productIdMock } = require('../mock/productsMock');
 
-describe('Checking the Controller layer', function () {
-  it('Returns the complete list of products', async function () {
-    const res = {};
-    const req = {};
+const chai = require('chai')
+const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
 
-    res.status = sinon.stub().returns(res);
-    res.json = sinon.stub().returns(res);
-    sinon.stub(productsService, 'getAll').resolves({ type: null, message: allProducts});
+const { expect } = chai;
+chai.use(sinonChai);
 
-    await productsController.listProducts(req, res);
-
-    expect(res.status).to.have.been.calledWith(200);
-    expect(res.json).to.have.been.calledWith(allProducts);
-  });
-
-  it('Return product by id', async function () {
-    const res = {};
-    const req = {
-      params: { id: 3 },
-    };
-
-    res.status = sinon.stub().returns(res);
-    res.json = sinon.stub().returns(res);
-    sinon.stub(productsService, 'getById').resolves({ type: null, message: [newProduct] });
-
-    await productsController.listProductsById(req, res);
-
-    expect(res.status).to.have.been.calledWith(200);
-    expect(res.json).to.have.been.calledWith(newProduct);
-  });
-
-   it('Returns an error message if the product id does not exist', async function () {
-    const res = {};
-    const req = {
-      params: { id: 10 },
-    };
-
-    res.status = sinon.stub().returns(res);
-    res.json = sinon.stub().returns(res);
-    sinon.stub(productsService, 'getById').resolves({ type: 404, message: 'Product not found' });
-
-    await productsController.listProductsById(req, res);
-
-    expect(res.status).to.have.been.calledWith(404);
-     expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
-  });
+describe('Testing controller layer', function () {
 
   afterEach(function () {
     sinon.restore();
   });
-});
+
+  it('Tests whether it returns all products', async () => {
+    const req = {};
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'getAll').resolves(productsMock);
+
+    await productsController.getAll(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+  });
+
+  it('Tests if it returns product by ID', async () => {
+    const res = {};
+    const req = {
+      params: { id: 1 },
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'getById').resolves({ type: null, message: productIdMock });
+
+    await productsController.getById(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(productIdMock);
+  });
+
+  it('Tests the return if the entered ID is invalid', async () => {
+    const res = {};
+    const req = {
+      params: { id: 999 },
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'getById')
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' })
+
+    await productsController.getById(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
+  });
+})

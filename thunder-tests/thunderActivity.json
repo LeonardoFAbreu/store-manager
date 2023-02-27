@@ -1,0 +1,35 @@
+[
+  {
+    "_id": "e6410065-3b34-4d66-bc37-04ca221c3f91",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://localhost:3000/product/1",
+    "url": "http://localhost:3000/products",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2023-02-15T18:08:11.571Z",
+    "modified": "2023-02-15T19:47:40.306Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "6f5f4fe3-559c-43e6-b5af-c77e4cedc443",
+    "colId": "history",
+    "containerId": "",
+    "name": "http://localhost:3000/product/1",
+    "url": "http://localhost:3000/products/4",
+    "method": "DELETE",
+    "sortNum": 0,
+    "created": "2023-02-15T18:09:24.618Z",
+    "modified": "2023-02-27T13:41:35.164Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"id\": 4,\n  \"name\": \"Carrinho de rolimã do Robin\"\n}",
+      "form": []
+    },
+    "tests": []
+  }
+]

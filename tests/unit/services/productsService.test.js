@@ -1,30 +1,33 @@
-const { expect } = require('chai');
+const productsService = require('../../../src/services/productsService');
+const productsModel = require('../../../src/models/productsModel');
+const connection = require('../../../src/models/connection');
+const { productsMock, data } = require('../mock/productsMock');
+
+const chai = require('chai');
 const sinon = require('sinon');
 
-const { allProducts } = require('./productsService.mock');
-const productsModel = require('../../../src/models/productsModel');
-const productsService = require('../../../src/services/productsService');
+describe('Testing Service layer', () => {
+  it('Tests error return if ID is invalid or does not exist', async () => {
+    sinon.stub(connection, 'execute').resolves([[productsMock[10]]]);
 
-describe('Checking the Service layer', function () {
-  it('Returns the complete list of products', async function () {
-    sinon.stub(productsModel, 'getAll').resolves(allProducts);
+    const result = await productsService.getById(1);
+    chai.expect(result.type).to.equal('PRODUCT_NOT_FOUND');
+  });
+  
+    it('Tests whether it returns all products when requested', async () => {
+    sinon.stub(productsModel, 'getAll').resolves(productsMock);
 
     const result = await productsService.getAll();
+    chai.expect(result.message).to.be.deep.equal(productsMock);
+    });
+  
+  it('Test the validation of the field "name"', async () => {
+    const result = await productsService.createProduct(data);
 
-    expect(result.type).to.be.equal(null);
-    expect(result.message).to.deep.equal(allProducts);
+    chai.expect(result.type).to.equal('INVALID_NEW_PRODUCT');
   });
 
-  it('Returns the complete list of all products', async function () {
-    sinon.stub(productsModel, 'getById').resolves([[allProducts[1]]]);
-
-    const result = await productsService.getById(2);
-
-    expect(result.type).to.be.equal(null);
-    expect(result.message).to.deep.equal([[allProducts[1]]]);
+    afterEach(() => {
+    sinon.restore();
   });
-
-   afterEach(function () {
-     sinon.restore();
-   });
- });
+})

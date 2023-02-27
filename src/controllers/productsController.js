@@ -11,6 +11,7 @@ const getById = async (req, res) => {
   if (productId.message) {
     return res.status(404).json(productId);
   }
+  
   return res.status(200).json(productId);
 };
 
@@ -18,24 +19,34 @@ const createProduct = async (req, res) => {
   try {
     const { name } = req.body;
     const newProduct = await productsService.createProduct({ name });
+
     return res.status(201).json(newProduct);
-  } catch (error) {
+  } catch (error) {    
     return res.status(error.status).json({ message: error.message });
   }
 };
 
-const updateById = async (req, res) => {
+const productUpdate = async (req, res) => { 
+  const { name } = req.body;
   const { id } = req.params;
-  const { product } = req.body;
-  const { type, message } = await productsService.updateById(id, product);
-  if (type) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+  const { type, message } = await productsService.productUpdate(name, Number(id));
+  if (type) return res.status(404).json({ message });
 
   return res.status(200).json(message);
+};
+
+const productDelete = async (req, res) => { 
+  const { id } = req.params;
+  const { type, message } = await productsService.productDelete(Number(id));
+  if (type) return res.status(404).json({ message });
+
+  return res.status(204).json(message);
 };
 
 module.exports = {
   getAll,
   getById,
   createProduct,
-  updateById,
+  productUpdate,
+  productDelete,
 };

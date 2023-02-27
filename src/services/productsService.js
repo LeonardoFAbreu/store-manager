@@ -1,5 +1,4 @@
 const productsModel = require('../models/productsModel');
-const { nameValidation } = require('../middlewares/nameValidation');
 
 const getAll = async () => {
   const products = await productsModel.getAll();
@@ -12,6 +11,7 @@ const getById = async (id) => {
     const message = { message: 'Product not found' };
     return message;
   }
+  
   return productId;
 };
 
@@ -21,24 +21,26 @@ const createProduct = async ({ name }) => {
   return { id, name };
 };
 
-const updateById = async (id, product) => {
-  const productValidation = nameValidation(product);
-  if (productValidation.type) {
-    return { type: productValidation.type, message: productValidation.message };
-  }
-  
-  const productUpdate = await productsModel.getById(id);
-  if (!productUpdate) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+const productUpdate = async (name, id) => { 
+  const productSearch = await productsModel.getById(id);
+  if (!productSearch) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+  const product = await productsModel.productUpdate(name, id);
 
-  await productsModel.updateById(id, product);
-  const result = await productsModel.getById(id);
+  return { type: null, message: product };
+};
 
-  return { type: null, message: result };
+const productDelete = async (id) => { 
+  const product = await getById(Number(id));
+  if (!product || product.length <= 0) return { type: 'NOT FOUND', message: 'Product not found' };
+  await productsModel.productDelete(Number(id));
+
+  return { type: null, message: '' };
 };
 
 module.exports = {
   getAll,
   getById,
   createProduct,
-  updateById,
+  productUpdate,
+  productDelete,
 };
