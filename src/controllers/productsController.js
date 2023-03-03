@@ -8,6 +8,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   const productId = await productsService.getById(id);
+  console.log('productId', productId);
   if (productId.message) {
     return res.status(404).json(productId);
   }
